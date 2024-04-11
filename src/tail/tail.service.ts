@@ -11,6 +11,7 @@ import {
     hex_to_program,
     match_cat_puzzle,
     AGG_SIG_ME,
+    AGG_SIG_UNSAFE,
     COIN_CREATE_CONDITION,
     MAGIC_SPEND
 } from '@tail-database/tail-database-client';
@@ -108,7 +109,7 @@ export class TailService {
             for (const data of result.as_iter()) {
                 const opcode = (data as SExp).first();
 
-                if (opcode.as_int() == AGG_SIG_ME) {
+                if (opcode.as_int() == AGG_SIG_ME || opcode.as_init() == AGG_SIG_UNSAFE) {
                     const synthetic_pk_sexp: SExp = data.rest().first();
                     const synthetic_pk_hex = synthetic_pk_sexp.atom.hex();
                     const synthetic_pk = this.bls.getPublicKey(synthetic_pk_hex);
